@@ -17,13 +17,9 @@ class MultipleFileField(forms.FileField):
             result = [single_file_clean(data, initial)]
         return result
 
-# Define your script choices here
-SCRIPT_CHOICES = [
-    ('test', 'Test Script'),
-    ('compile_flip700', 'Compile Flip700 Script'),
-    # Add more script choices here as needed
-]
-
 class FileFieldForm(forms.Form):
     file_field = MultipleFileField()
-    script_type = forms.ChoiceField(choices=SCRIPT_CHOICES)
+    script_type = forms.ChoiceField(choices=[
+        ('test', 'Test Script'),
+        ('compile_flip700', 'Compile Flip700 Script'),
+    ])

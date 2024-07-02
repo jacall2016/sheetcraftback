@@ -1,4 +1,3 @@
-<!-- display.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,20 +25,20 @@
         <button onclick="location.href='{% url 'download_file' %}'">Download</button>
     {% endif %}
 
-    {% for sheet_name, df in processed_data.items %}
+    {% for sheet_name, sheet_data in processed_data.items %}
         <h3>{{ sheet_name }}
             <button onclick="toggleSheet('sheet_{{ forloop.counter }}')">+</button>
         </h3>
         <table id="sheet_{{ forloop.counter }}" class="sheet" border="1">
             <thead>
                 <tr>
-                    {% for col in df.columns %}
+                    {% for col in sheet_data.columns %}
                         <th>{{ col }}</th>
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                {% for row in df.itertuples %}
+                {% for row in sheet_data.rows %}
                     <tr>
                         {% for cell in row %}
                             <td>{{ cell }}</td>
