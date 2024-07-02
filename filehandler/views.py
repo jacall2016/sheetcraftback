@@ -1,6 +1,8 @@
+# views.py
+
 import io
 import base64
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from .forms import FileUploadForm
 from .scripts import available_scripts  # Import the dictionary of available scripts
@@ -26,23 +28,17 @@ def upload_file(request):
                 request.session['file_content'] = encoded_file_content
                 request.session['file_name'] = filename
 
-                # Prepare a JSON response with the processed data and a download link
-                response_data = {
-                    'sheets': {
-                        sheet_name: {
-                            'columns': df.columns.tolist(),
-                            'rows': df.values.tolist()
-                        }
-                        for sheet_name, df in processed_data.items()
-                    },
-                    'download_link': '/filehandler/download/'
+                # Prepare the context for display.html
+                context = {
+                    'processed_data': processed_data,
+                    'download_available': True
                 }
 
-                return JsonResponse(response_data)
+                return render(request, 'display.html', context)
             except ValueError as e:
-                return JsonResponse({'error': str(e)}, status=400)
+                return render(request, 'upload.html', {'form': form, 'error': str(e)})
         else:
-            return JsonResponse({'error': 'Invalid form submission.'}, status=400)
+            return render(request, 'upload.html', {'form': form, 'error': 'Invalid form submission.'})
     else:
         form = FileUploadForm()
     return render(request, 'upload.html', {'form': form})

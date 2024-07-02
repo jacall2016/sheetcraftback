@@ -1,3 +1,4 @@
+# test.py
 import pandas as pd
 import io
 
@@ -18,4 +19,13 @@ def process_file(file):
             df.to_excel(writer, sheet_name=sheet_name, index=False)
     output.seek(0)
     
-    return sheet_to_df_map, output, 'processed_file.xlsx'
+    # Prepare the data for the template
+    processed_data = {
+        sheet_name: {
+            'columns': df.columns.tolist(),
+            'rows': df.values.tolist()
+        }
+        for sheet_name, df in sheet_to_df_map.items()
+    }
+    
+    return processed_data, output, 'processed_file.xlsx'
