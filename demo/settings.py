@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-mjkb#aepx3lmq1fl)&+=4&$wjx7@&hw2b2swycf_twf3z*w57#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'sheetcraftback.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
