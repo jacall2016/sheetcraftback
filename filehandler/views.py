@@ -1,47 +1,40 @@
 # views.py
-
 import io
 import base64
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from .forms import FileUploadForm
+from django.views.generic.edit import FormView
+from .forms import FileFieldForm
 from .scripts import available_scripts  # Import the dictionary of available scripts
 
-def handle_uploaded_file(file, script_type):
-    if script_type in available_scripts:
-        # Call the corresponding script function
-        processed_data, output, filename = available_scripts[script_type](file)
-        return processed_data, output, filename
-    else:
-        raise ValueError(f"Unknown script type: {script_type}")
+class FileFieldFormView(FormView):
+    form_class = FileFieldForm
+    template_name = "upload.html"  # Replace with your template.
+    success_url = "/filehandler/upload/"  # Replace with your URL or reverse().
 
-def upload_file(request):
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES['file']
-            script_type = form.cleaned_data['script_type']
+    def form_valid(self, form):
+        files = form.cleaned_data["file_field"]
+        script_type = form.cleaned_data['script_type']
+        
+        if script_type in available_scripts:
             try:
-                processed_data, output, filename = handle_uploaded_file(file, script_type)
+                processed_data, output, filename = available_scripts[script_type](files)
                 # Encode the file content in base64 before saving it in the session
                 encoded_file_content = base64.b64encode(output.getvalue()).decode('utf-8')
-                request.session['file_content'] = encoded_file_content
-                request.session['file_name'] = filename
+                self.request.session['file_content'] = encoded_file_content
+                self.request.session['file_name'] = filename
 
-                # Prepare the context for display.html
+                # Prepare the context for the display.html template
                 context = {
                     'processed_data': processed_data,
-                    'download_available': True
+                    'download_available': True,
                 }
 
-                return render(request, 'display.html', context)
+                return render(self.request, 'display.html', context)
             except ValueError as e:
-                return render(request, 'upload.html', {'form': form, 'error': str(e)})
+                return JsonResponse({'error': str(e)}, status=400)
         else:
-            return render(request, 'upload.html', {'form': form, 'error': 'Invalid form submission.'})
-    else:
-        form = FileUploadForm()
-    return render(request, 'upload.html', {'form': form})
+            return JsonResponse({'error': 'Unknown script type.'}, status=400)
 
 def download_file(request):
     encoded_file_content = request.session.get('file_content')

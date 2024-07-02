@@ -1,10 +1,8 @@
-# filehandler/scripts/__init__.py
+from .complile_flip700 import compile_flip700
+from .test import process_file
 
-from .test import process_file as test_process_file
-# Add more imports as needed
-
-# Optional: Create a dictionary of available scripts
 available_scripts = {
-    'test': test_process_file,
-    # Add more script mappings here
+    'test': process_file,
+    'compile_flip700': compile_flip700,
+    # Add other scripts here as needed
 }

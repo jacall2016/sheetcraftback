@@ -1,28 +1,27 @@
-<!-- upload.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>File Upload</title>
 </head>
 <body>
-    <h2>Upload a File</h2>
-    <form method="post" enctype="multipart/form-data">
+    <h2>Upload Files</h2>
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
         {% csrf_token %}
-        <label for="file">Choose file:</label>
-        <input type="file" id="file" name="file" required><br><br>
-
+        <label for="file_field">Choose files:</label>
+        <input type="file" id="file_field" name="file_field" multiple required><br><br>
+        
         <label for="script_type">Select Script:</label>
         <select id="script_type" name="script_type">
             {% for value, display in form.script_type.field.choices %}
                 <option value="{{ value }}">{{ display }}</option>
             {% endfor %}
         </select><br><br>
-
+        
         <button type="submit">Upload</button>
     </form>
     <div id="response">
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
+        {% if message %}
+            <p>{{ message }}</p>
         {% endif %}
     </div>
 </body>

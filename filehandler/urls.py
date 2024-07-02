@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+from .views import FileFieldFormView, download_file
 
 urlpatterns = [
-    path('upload/', views.upload_file, name='upload_file'),
-    path('download/', views.download_file, name='download_file'),
+    path('upload/', FileFieldFormView.as_view(), name='upload_file'),
+    path('download/', download_file, name='download_file'),
 ]

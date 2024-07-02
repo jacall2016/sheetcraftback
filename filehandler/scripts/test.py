@@ -1,8 +1,13 @@
-# test.py
 import pandas as pd
 import io
 
 def process_file(file):
+    # Ensure only one file is processed
+    if isinstance(file, list):
+        if len(file) > 1:
+            raise ValueError("Only one file can be processed at a time.")
+        file = file[0]
+
     # Read the uploaded file into a dictionary of DataFrames
     xls = pd.ExcelFile(file)
     sheet_to_df_map = {}
@@ -21,10 +26,7 @@ def process_file(file):
     
     # Prepare the data for the template
     processed_data = {
-        sheet_name: {
-            'columns': df.columns.tolist(),
-            'rows': df.values.tolist()
-        }
+        sheet_name: df
         for sheet_name, df in sheet_to_df_map.items()
     }
     
