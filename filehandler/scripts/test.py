@@ -6,12 +6,12 @@ def process_file(file):
     # Read the uploaded file into a dictionary of DataFrames
     xls = pd.ExcelFile(file)
     sheet_to_df_map = {}
+    
     for sheet_name in xls.sheet_names:
         df = pd.read_excel(file, sheet_name=sheet_name)
-        # Perform some processing on each sheet (e.g., example processing)
-        df['Processed'] = df.iloc[:, 0] * 2  # Example processing
+        df = df.fillna('')  # Replace NaN values with empty strings
         sheet_to_df_map[sheet_name] = df
-
+    
     # Write the DataFrames to a new Excel file in memory
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
