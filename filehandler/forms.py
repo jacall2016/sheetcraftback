@@ -22,4 +22,7 @@ class FileFieldForm(forms.Form):
     script_type = forms.ChoiceField(choices=[
         ('test', 'Test Script'),
         ('compile_flip700', 'Compile Flip700 Script'),
+        ('compile_yemk', 'Compile YEMK Script'),
+        ('compile_phl', 'Compile PHL Script'),
+        ('compile_live', 'Compile LIVE Script'),
     ])
