@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processed File</title>
+    <style>
+        .sheet {
+            display: none;
+        }
+    </style>
+    <script>
+        function toggleSheet(sheetId) {
+            var sheet = document.getElementById(sheetId);
+            if (sheet.style.display === "none") {
+                sheet.style.display = "table";
+            } else {
+                sheet.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Processed File Data</h2>
+    
+    {% if download_available %}
+        <button onclick="location.href='{% url 'download_file' %}'">Download</button>
+    {% endif %}
+    
+    {% for sheet_name, df in processed_data.items %}
+        <h3>{{ sheet_name }} 
+            <button onclick="toggleSheet('sheet_{{ forloop.counter }}')">View/Hide</button>
+        </h3>
+        <table id="sheet_{{ forloop.counter }}" class="sheet" border="1">
+            <thead>
+                <tr>
+                    {% for col in df.columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in df.itertuples %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</body>
+</html>
