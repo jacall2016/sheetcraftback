@@ -1,6 +1,14 @@
 # forms.py
 from django import forms
 
+SCRIPT_CHOICES = [
+    ('test', 'Test Script'),
+    ('compile_flip700', 'Compile Flip700 Script'),
+    ('compile_yemk', 'Compile Yemk Script'),
+    ('compile_phl', 'Compile Phl Script'),
+    ('compile_live', 'Compile Live Script'),
+    ('concatenate_analysis', 'Concatenate Analysis Script')
+]
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
@@ -19,10 +27,4 @@ class MultipleFileField(forms.FileField):
 
 class FileFieldForm(forms.Form):
     file_field = MultipleFileField()
-    script_type = forms.ChoiceField(choices=[
-        ('test', 'Test Script'),
-        ('compile_flip700', 'Compile Flip700 Script'),
-        ('compile_yemk', 'Compile YEMK Script'),
-        ('compile_phl', 'Compile PHL Script'),
-        ('compile_live', 'Compile LIVE Script'),
-    ])
+    script_type = forms.ChoiceField(choices=SCRIPT_CHOICES)
