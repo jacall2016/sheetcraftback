@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>File Upload</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    {% load static %}
+    <script src="{% static 'js/upload.js' %}"></script>
 </head>
 <body>
     <h2>Upload Files</h2>
@@ -9,14 +14,14 @@
         {% csrf_token %}
         <label for="file_field">Choose files:</label>
         <input type="file" id="file_field" name="file_field" multiple required><br><br>
-        
+       
         <label for="script_type">Select Script:</label>
         <select id="script_type" name="script_type">
             {% for value, display in form.script_type.field.choices %}
                 <option value="{{ value }}">{{ display }}</option>
             {% endfor %}
         </select><br><br>
-        
+       
         <button type="submit">Upload</button>
     </form>
     <div id="response">
@@ -24,5 +29,8 @@
             <p>{{ message }}</p>
         {% endif %}
     </div>
+
+    <div id="images"></div>
+    <div id="sheets"></div>
 </body>
 </html>

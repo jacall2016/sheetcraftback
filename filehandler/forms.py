@@ -1,4 +1,3 @@
-# forms.py
 from django import forms
 
 SCRIPT_CHOICES = [
@@ -7,8 +6,11 @@ SCRIPT_CHOICES = [
     ('compile_yemk', 'Compile Yemk Script'),
     ('compile_phl', 'Compile Phl Script'),
     ('compile_live', 'Compile Live Script'),
-    ('concatenate_analysis', 'Concatenate Analysis Script')
+    ('concatenate_analysis', 'Concatenate Analysis Script'),
+    ('analysis_yemk_phl_live', 'Analysis Yemk PHL Live Script'),
+    ('analysis_flip700_phl_live', 'Analysis Flip700 PHL Live Script')
 ]
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 

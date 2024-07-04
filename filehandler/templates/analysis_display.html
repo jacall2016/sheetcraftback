@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Results</title>
+</head>
+<body>
+    <h2>Analysis Results</h2>
+    {% if download_available %}
+        <button onclick="location.href='{% url 'download_file' %}'">Download</button>
+    {% endif %}
+
+    <div id="images">
+        <h3>Images</h3>
+        {% for image in images %}
+            <img src="/filehandler/download_image/{{ image }}" alt="{{ image }}">
+        {% endfor %}
+    </div>
+
+    <div id="sheets">
+        <h3>Sheets</h3>
+        {% for sheet_name, sheet_data in sheets.items %}
+            <h4>{{ sheet_name }}</h4>
+            <table border="1">
+                <tr>
+                    {% for column in sheet_data.columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in sheet_data.rows %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </div>
+</body>
+</html>

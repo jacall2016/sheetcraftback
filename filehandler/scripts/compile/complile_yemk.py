@@ -10,6 +10,8 @@ def generate_well_numbers():
     return [f"{row}{col}" for row in rows for col in columns]
 
 def extract_file_info(file):
+    if not hasattr(file, 'name'):
+        file.name = 'uploaded_yemk_file.xlsx'
     base_name = file.name  # Use the file name directly from the file object
     base_name = base_name.split(' ', 1)[-1]
     plate_name = base_name.split('_')[0]
