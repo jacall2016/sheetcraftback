@@ -5,10 +5,15 @@ import zipfile
 import pandas as pd
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.utils.decorators import method_decorator
+from django.middleware.csrf import get_token
 from django.views.generic.edit import FormView
 from .forms import FileFieldForm
 from .scripts import available_scripts
 
+
+@method_decorator(csrf_protect, name='dispatch')
 class FileFieldFormView(FormView):
     form_class = FileFieldForm
     template_name = "upload.html"
@@ -51,15 +56,15 @@ class FileFieldFormView(FormView):
                     elif name.startswith('images/'):
                         images.append(name)
 
-                context = {
+                response_data = {
                     'sheets': sheets,
                     'images': images,
                     'download_available': True,
                 }
-                return render(self.request, 'analysis_display.html', context)
+                return JsonResponse(response_data)
             else:
                 if isinstance(processed_data, dict):
-                    context = {
+                    response_data = {
                         'sheets': {
                             sheet_name: {
                                 'columns': df['columns'] if 'columns' in df else df.columns.tolist(),
@@ -70,13 +75,13 @@ class FileFieldFormView(FormView):
                         'download_available': True,
                     }
                 else:
-                    context = {
+                    response_data = {
                         'columns': processed_data.columns.tolist(),
                         'rows': processed_data.values.tolist(),
                         'download_available': True,
                     }
 
-                return render(self.request, 'display.html', context)
+                return JsonResponse(response_data)
 
         except ValueError as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -91,3 +96,11 @@ def download_file(request):
         return response
     else:
         return HttpResponse("No file to download.", status=404)
+    
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    csrf_token = get_token(request)
+    response = JsonResponse({'csrfToken': csrf_token})
+    response["Access-Control-Allow-Credentials"] = "true"
+    response["Access-Control-Allow-Origin"] = "http://localhost:3000"
+    return response
