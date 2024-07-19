@@ -79,7 +79,7 @@ class FileFieldFormView(FormView):
                         'rows': processed_data.values.tolist(),
                         'download_available': True,
                     }
-
+                    
                 return JsonResponse(response_data)
 
         except ValueError as e:
