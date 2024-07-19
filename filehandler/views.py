@@ -12,7 +12,6 @@ from django.views.generic.edit import FormView
 from .forms import FileFieldForm
 from .scripts import available_scripts
 
-
 @method_decorator(csrf_protect, name='dispatch')
 class FileFieldFormView(FormView):
     form_class = FileFieldForm
