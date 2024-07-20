@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 #CORS_ALLOWED_ORIGINS = [
