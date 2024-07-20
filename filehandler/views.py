@@ -102,5 +102,5 @@ def get_csrf_token(request):
     csrf_token = get_token(request)
     response = JsonResponse({'csrfToken': csrf_token})
     response["Access-Control-Allow-Credentials"] = "true"
-    response["Access-Control-Allow-Origin"] = "true"
+    response["Access-Control-Allow-Origin"] = "http://localhost:3000", "http://127.0.0.1:3000"
     return response
