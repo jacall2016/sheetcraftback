@@ -96,6 +96,8 @@ class FileFieldFormView(FormView):
             logger.error(f"ValueError: {str(e)}")
             return JsonResponse({'error': str(e)}, status=400)
 
+
+@csrf_exempt
 def download_file(request):
     encoded_file_content = request.session.get('file_content')
     file_name = request.session.get('file_name')
