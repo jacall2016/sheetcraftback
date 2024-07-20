@@ -5,20 +5,21 @@ import zipfile
 import pandas as pd
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 from django.views.generic.edit import FormView
 from .forms import FileFieldForm
 from .scripts import available_scripts
 
-@method_decorator(csrf_protect, name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch')
 class FileFieldFormView(FormView):
     form_class = FileFieldForm
     template_name = "upload.html"
     success_url = "/"
 
     def form_valid(self, form):
+
         files = form.cleaned_data['file_field']
         script_type = form.cleaned_data['script_type']
 
