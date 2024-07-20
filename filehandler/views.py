@@ -40,6 +40,8 @@ class FileFieldFormView(FormView):
             self.request.session['file_content'] = encoded_file_content
             self.request.session['file_name'] = filename
 
+            print("Session Data Set:", self.request.session.get('file_content'), self.request.session.get('file_name'))
+
             if script_type in ['analysis_yemk_phl_live', 'analysis_flip700_phl_live']:
                 zip_file = zipfile.ZipFile(io.BytesIO(output.getvalue()))
                 sheets = {}
@@ -95,6 +97,7 @@ def download_file(request):
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
     else:
+        print("No file content or file name in session.")
         return HttpResponse("No file to download.", status=404)
     
 @ensure_csrf_cookie
