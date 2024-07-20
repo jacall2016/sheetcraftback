@@ -61,7 +61,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = list(default_headers)
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-CSRFToken',
+]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
