@@ -1,52 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Processed File</title>
-    <style>
-        .sheet {
-            display: none;
-        }
-    </style>
-    <script>
-        function toggleSheet(sheetId) {
-            var sheet = document.getElementById(sheetId);
-            if (sheet.style.display === "none") {
-                sheet.style.display = "table";
-            } else {
-                sheet.style.display = "none";
-            }
-        }
-    </script>
+    <title>Display Data</title>
 </head>
 <body>
-    <h2>Processed File Data</h2>
-
-    {% if download_available %}
-        <button onclick="location.href='{% url 'download_file' %}'">Download</button>
-    {% endif %}
-
-    {% for sheet_name, sheet_data in processed_data.items %}
-        <h3>{{ sheet_name }}
-            <button onclick="toggleSheet('sheet_{{ forloop.counter }}')">+</button>
-        </h3>
-        <table id="sheet_{{ forloop.counter }}" class="sheet" border="1">
-            <thead>
-                <tr>
-                    {% for col in sheet_data.columns %}
-                        <th>{{ col }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in sheet_data.rows %}
+    <h1>Processed Data</h1>
+    {% if sheets %}
+        <h2>Sheets</h2>
+        {% for sheet_name, data in sheets.items %}
+            <h3>{{ sheet_name }}</h3>
+            <table>
+                <thead>
                     <tr>
-                        {% for cell in row %}
-                            <td>{{ cell }}</td>
+                        {% for column in data.columns %}
+                            <th>{{ column }}</th>
                         {% endfor %}
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
+                </thead>
+                <tbody>
+                    {% for row in data.rows %}
+                        <tr>
+                            {% for cell in row %}
+                                <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% endif %}
+    {% if images %}
+        <h2>Images</h2>
+        {% for image in images %}
+            <img src="data:image/png;base64,{{ image }}" alt="image">
+        {% endfor %}
+    {% endif %}
+    {% if download_available %}
+        <a href="{% url 'download_file' %}">Download Processed File</a>
+    {% endif %}
 </body>
 </html>

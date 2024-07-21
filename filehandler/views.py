@@ -4,7 +4,7 @@ import base64
 import zipfile
 import pandas as pd
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
@@ -14,6 +14,9 @@ from .scripts import available_scripts
 import logging
 
 logger = logging.getLogger(__name__)
+
+def welcome(request):
+    return render(request, 'welcome.html')
 
 @method_decorator(csrf_exempt, name='dispatch')
 class FileFieldFormView(FormView):
@@ -26,7 +29,7 @@ class FileFieldFormView(FormView):
         script_type = form.cleaned_data['script_type']
 
         if script_type not in available_scripts:
-            return JsonResponse({'error': 'Invalid script type.'}, status=400)
+            return render(self.request, 'error.html', {'message': 'Invalid script type.'})
 
         try:
             if script_type == 'test':
@@ -65,37 +68,37 @@ class FileFieldFormView(FormView):
                     elif name.startswith('images/'):
                         images.append(name)
 
-                response_data = {
+                context = {
                     'sheets': sheets,
                     'images': images,
                     'download_available': True,
                 }
-                return JsonResponse(response_data)
+                return render(self.request, 'display.html', context)
             else:
                 if isinstance(processed_data, dict):
-                    response_data = {
-                        'sheets': {
-                            sheet_name: {
-                                'columns': df['columns'] if 'columns' in df else df.columns.tolist(),
-                                'rows': df['rows'] if 'rows' in df else df.values.tolist()
-                            }
-                            for sheet_name, df in processed_data.items()
-                        },
+                    sheets = {
+                        sheet_name: {
+                            'columns': df['columns'] if 'columns' in df else df.columns.tolist(),
+                            'rows': df['rows'] if 'rows' in df else df.values.tolist()
+                        }
+                        for sheet_name, df in processed_data.items()
+                    }
+                    context = {
+                        'sheets': sheets,
                         'download_available': True,
                     }
                 else:
-                    response_data = {
+                    context = {
                         'columns': processed_data.columns.tolist(),
                         'rows': processed_data.values.tolist(),
                         'download_available': True,
                     }
-                    
-                return JsonResponse(response_data)
+
+                return render(self.request, 'display.html', context)
 
         except ValueError as e:
             logger.error(f"ValueError: {str(e)}")
-            return JsonResponse({'error': str(e)}, status=400)
-
+            return render(self.request, 'error.html', {'message': str(e)})
 
 @csrf_exempt
 def download_file(request):
@@ -118,7 +121,7 @@ def download_file(request):
 @ensure_csrf_cookie
 def get_csrf_token(request):
     csrf_token = get_token(request)
-    response = JsonResponse({'csrfToken': csrf_token})
+    response = HttpResponse({'csrfToken': csrf_token})
     response["Access-Control-Allow-Credentials"] = "true"
     response["Access-Control-Allow-Origin"] = "http://localhost:3000", "http://127.0.0.1:3000"
     return response

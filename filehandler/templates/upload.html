@@ -1,31 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>custom script</title>
+    <title>Upload File</title>
 </head>
-<>
-    <h2>Upload Files</h2>
-    <form method="post" enctype="multipart/form-data" id="uploadForm">
+<body>
+    <h1>Upload File</h1>
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="file_field">Choose files:</label>
-        <input type="file" id="file_field" name="file_field" multiple required><br><br>
-       
-        <label for="script_type">Select Script:</label>
-        <select id="script_type" name="script_type">
-            {% for value, display in form.script_type.field.choices %}
-                <option value="{{ value }}">{{ display }}</option>
-            {% endfor %}
-        </select><br><br>
-       
+        {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
-    <div id="response">
-        {% if message %}
-            <p>{{ message }}</p>
-        {% endif %}
-    </div>
-
-    <div id="images"></div>
-    <div id="sheets"></div>
 </body>
 </html>
