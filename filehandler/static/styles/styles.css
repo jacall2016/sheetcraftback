@@ -1,0 +1,212 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+body {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.2em;
+  background-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--primary-dark);
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("../images/numWorld8.jpg") no-repeat center center fixed;
+  background-size: cover;
+  z-index: -1;
+  filter: brightness(0.4);
+  opacity: 0.7;
+  background-color: var(--primary);
+}
+
+a {
+  color: #F2F2F0;
+  text-decoration: none;
+}
+
+.site-title {
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #314A59;
+  z-index: -1;
+}
+
+header {
+  background-color: #314A59;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: 255, 255, 255;
+}
+
+header .site-logo {
+  height: 40px;
+  margin-right: 15px;
+}
+
+header h1 {
+  color: 255, 255, 255;
+  margin: 0;
+  display: inline;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  color: 255, 255, 255;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+  width: 100%;
+  height: 100%;
+}
+
+nav ul li a:hover {
+  color: #2E8B57;
+}
+
+footer {
+  background-color: #314A59;
+  color: 255, 255, 255;
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+main {
+  padding: 20px;
+  justify-content: center;
+}
+
+.upload-container, .generate-container, .process-container {
+  background-color: rgba(49, 74, 89, 0.7);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  position: relative;
+}
+
+.upload-container::before, .generate-container::before, .process-container::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+}
+
+.upload-container::before {
+  background-image: url("../images/upload-icon.svg"); /* Replace with actual icon path */
+}
+
+.generate-container::before, .process-container::before {
+  background-image: url("../images/table-icon.svg"); /* Replace with actual icon path */
+}
+
+.download-button {
+  background-color: #081226;
+  color: #F2F2F0;
+  border-radius: 5px;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-weight: bold;
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  transition: background-color 0.3s;
+}
+
+.download-button:hover {
+  background-color: #2E8B57;
+}
+
+label {
+  margin-bottom: 20px;
+}
+
+.data-table-container {
+  margin: auto;
+  overflow: auto;
+  max-height: 600px;
+  width: 90%;
+  background-color: rgba(49, 74, 89, 0.7);
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  overflow: hidden;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #081226;
+  padding: 8px;
+  text-align: left;
+}
+
+.image-gallery img {
+  max-width: 100px;
+  margin: 10px;
+}
+
+.welcome, .upload-container, .generate-container, .process-container, .download-container {
+  background-color: rgba(49, 74, 89, 0.7);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+input, textarea, select, button {
+  height: 30px;
+  border-radius: 15px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #2E8B57;
+  color: #F2F2F0;
+  transition: ease-in 0.1s;
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -22,3 +22,6 @@ staticfiles/
 .DS_Store
 .idea/
 *.swp
+
+styles.scss
+styles.css.map

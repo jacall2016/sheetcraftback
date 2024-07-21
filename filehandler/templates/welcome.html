@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Welcome to DJANGODEMO3</title>
-</head>
-<body>
-    <header>
-        <h1>Welcome to DJANGODEMO3</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'upload' %}">Custom Script</a></li>
-                <!-- Add more navigation links as needed -->
-            </ul>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <footer>
-        <p>&copy; 2024 DJANGODEMO3. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+    <div class="welcome">
+        <div>
+            <h1>Welcome to SheetCraft</h1>
+            <p>
+            SheetCraft is designed to help researchers and professionals solve problems with data processing. One of the biggest challenges in data processing is managing the magnitude and volume of data while ensuring quality assurance. Our platform addresses these challenges by providing custom scripts designed to streamline the process and automate validation.
+            </p>
+            <div>
+            <p>
+                Our custom scripts section allows you to upload your Excel files and select from a variety of pre-built scripts to process your data. These scripts can perform tasks like filtering, sorting, and cleaning data, all while ensuring data quality and consistency.
+            </p>
+            </div>
+    
+            <div>
+            <p>
+                By leveraging SheetCraft, you can ensure that your data processing tasks are performed efficiently and accurately. Join us in advancing biotech research with cutting-edge tools and technology. Our platform is designed to be user-friendly and accessible, ensuring that you can focus on your research without any hassle.
+            </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

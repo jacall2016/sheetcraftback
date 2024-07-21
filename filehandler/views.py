@@ -4,7 +4,7 @@ import base64
 import zipfile
 import pandas as pd
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
@@ -29,13 +29,35 @@ class FileFieldFormView(FormView):
         script_type = form.cleaned_data['script_type']
 
         if script_type not in available_scripts:
-            return render(self.request, 'error.html', {'message': 'Invalid script type.'})
+            return JsonResponse({'error': 'Invalid script type.'}, status=400)
 
         try:
             if script_type == 'test':
                 processed_data, output, filename = available_scripts[script_type](files[0].read())
             elif script_type in ['analysis_yemk_phl_live', 'analysis_flip700_phl_live']:
                 output, filename = available_scripts[script_type](files[0].read())
+                # Extract images if present
+                zip_file = zipfile.ZipFile(io.BytesIO(output.getvalue()))
+                sheets = {}
+                images = []
+                for name in zip_file.namelist():
+                    if name.endswith('.xlsx'):
+                        with zip_file.open(name) as f:
+                            df = pd.read_excel(f)
+                            sheet_name = os.path.basename(name)
+                            sheets[sheet_name] = {
+                                'columns': df.columns.tolist(),
+                                'rows': df.values.tolist()
+                            }
+                    elif name.startswith('images/'):
+                        with zip_file.open(name) as img_file:
+                            image_content = img_file.read()
+                            image_name = os.path.basename(name)
+                            image_path = os.path.join('static', 'images', image_name)
+                            with open(image_path, 'wb') as f:
+                                f.write(image_content)
+                            images.append(f'/static/images/{image_name}')
+                self.request.session['images'] = images  # Store image paths in session
             elif script_type in ['compile_flip700', 'compile_yemk', 'compile_phl', 'compile_live', 'concatenate_analysis']:
                 processed_data, output, filename = available_scripts[script_type](files)
             else:
@@ -52,53 +74,30 @@ class FileFieldFormView(FormView):
             else:
                 logger.error("Failed to save session data.")
 
-            if script_type in ['analysis_yemk_phl_live', 'analysis_flip700_phl_live']:
-                zip_file = zipfile.ZipFile(io.BytesIO(output.getvalue()))
-                sheets = {}
-                images = []
-                for name in zip_file.namelist():
-                    if name.endswith('.xlsx'):
-                        with zip_file.open(name) as f:
-                            df = pd.read_excel(f)
-                            sheet_name = os.path.basename(name)
-                            sheets[sheet_name] = {
-                                'columns': df.columns.tolist(),
-                                'rows': df.values.tolist()
-                            }
-                    elif name.startswith('images/'):
-                        images.append(name)
+            sheets = {}
 
-                context = {
-                    'sheets': sheets,
-                    'images': images,
-                    'download_available': True,
-                }
-                return render(self.request, 'display.html', context)
-            else:
+            if script_type not in ['analysis_yemk_phl_live', 'analysis_flip700_phl_live']:
                 if isinstance(processed_data, dict):
-                    sheets = {
-                        sheet_name: {
+                    for sheet_name, df in processed_data.items():
+                        sheets[sheet_name] = {
                             'columns': df['columns'] if 'columns' in df else df.columns.tolist(),
                             'rows': df['rows'] if 'rows' in df else df.values.tolist()
                         }
-                        for sheet_name, df in processed_data.items()
-                    }
-                    context = {
-                        'sheets': sheets,
-                        'download_available': True,
-                    }
                 else:
-                    context = {
+                    sheets['Sheet1'] = {
                         'columns': processed_data.columns.tolist(),
-                        'rows': processed_data.values.tolist(),
-                        'download_available': True,
+                        'rows': processed_data.values.tolist()
                     }
-
-                return render(self.request, 'display.html', context)
+            
+            return render(self.request, 'display.html', {
+                'sheets': sheets,
+                'images': self.request.session.get('images', []),
+                'download_available': True
+            })
 
         except ValueError as e:
             logger.error(f"ValueError: {str(e)}")
-            return render(self.request, 'error.html', {'message': str(e)})
+            return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
 def download_file(request):
@@ -121,7 +120,7 @@ def download_file(request):
 @ensure_csrf_cookie
 def get_csrf_token(request):
     csrf_token = get_token(request)
-    response = HttpResponse({'csrfToken': csrf_token})
+    response = JsonResponse({'csrfToken': csrf_token})
     response["Access-Control-Allow-Credentials"] = "true"
     response["Access-Control-Allow-Origin"] = "http://localhost:3000", "http://127.0.0.1:3000"
     return response

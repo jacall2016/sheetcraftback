@@ -1,42 +1,58 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Display Data</title>
-</head>
-<body>
-    <h1>Processed Data</h1>
-    {% if sheets %}
-        <h2>Sheets</h2>
-        {% for sheet_name, data in sheets.items %}
-            <h3>{{ sheet_name }}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        {% for column in data.columns %}
-                            <th>{{ column }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data.rows %}
-                        <tr>
-                            {% for cell in row %}
-                                <td>{{ cell }}</td>
+{% extends "base.html" %}
+
+{% block title %}Display Data{% endblock %}
+
+{% block content %}
+    <div class="data-container">
+        <h1>Processed Data</h1>
+
+        {% if sheets %}
+            {% for sheet_name, sheet_data in sheets.items %}
+                <div class="data-table-container">
+                    <h2>{{ sheet_name }}</h2>
+                    <button onclick="toggleTable('{{ sheet_name }}')">Toggle {{ sheet_name }}</button>
+                    <table id="{{ sheet_name }}" class="data-table">
+                        <thead>
+                            <tr>
+                                {% for column in sheet_data.columns %}
+                                    <th>{{ column }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in sheet_data.rows %}
+                                <tr>
+                                    {% for cell in row %}
+                                        <td>{{ cell }}</td>
+                                    {% endfor %}
+                                </tr>
                             {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endfor %}
-    {% endif %}
-    {% if images %}
-        <h2>Images</h2>
-        {% for image in images %}
-            <img src="data:image/png;base64,{{ image }}" alt="image">
-        {% endfor %}
-    {% endif %}
-    {% if download_available %}
-        <a href="{% url 'download_file' %}">Download Processed File</a>
-    {% endif %}
-</body>
-</html>
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if images %}
+            <h2>Images</h2>
+            <div class="image-gallery">
+                {% for image in images %}
+                    <img src="{{ image.url }}" alt="{{ image.name }}">
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <a href="{% url 'download' %}" class="download-button">Download File</a>
+    </div>
+
+    <script>
+        function toggleTable(sheetName) {
+            const table = document.getElementById(sheetName);
+            if (table.style.display === 'none') {
+                table.style.display = 'table';
+            } else {
+                table.style.display = 'none';
+            }
+        }
+    </script>
+{% endblock %}
