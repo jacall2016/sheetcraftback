@@ -7,58 +7,35 @@
         <h1>Upload and Generate File</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div>
-                <label="id_script_type">Select a script:</label=>
-                <select id="id_script_type" name="script_type">
-                    <option value="">Select a script</option>
-                    <option value="test">Test Script</option>
-                    <option value="concatenate_analysis">Concatenate Analysis</option>
-                    <option value="analysis_yemk_phl_live">Analysis Yemk PHL Live</option>
-                    <option value="analysis_flip700_phl_live">Analysis Flip700 PHL Live</option>
-                    <option value="compile_yemk">Compile Yemk</option>
-                    <option value="compile_flip700">Compile Flip700</option>
-                    <option value="compile_phl">Compile Phl</option>
-                    <option value="compile_live">Compile Live</option>
-                </select>
-            </div>
-            <div>
-                <label for="id_file_field">Select file:</label>
-                <input type="file" id="id_file_field" name="file_field">
-            </div>
+            {{ form.as_p }}
             <button type="submit">Upload</button>
         </form>
-        <div id="instructions" class="instructions">
-            <p id="instruction-test" class="instruction-text">For Test script: pick any excel file and the script will generate a new excel file of the same kind.</p>
-            <p id="instruction-concatenate_analysis" class="instruction-text">For the Concatenate Analysis script: select a number of analysis files for the script to concatenate data from.</p>
-            <p id="instruction-analysis_yemk_phl_live" class="instruction-text">For the Analysis Yemk PHL Live script: select a precursor file like "LC2-032_KCP1 pHL-YEMK DC 20231030.xlsx".</p>
-            <p id="instruction-analysis_flip700_phl_live" class="instruction-text">For the Analysis Flip700 PHL Live script: select a precursor file like "LC2-032_KCP1 pHL-FLIP700 DC 20231030.xlsx".</p>
-            <p id="instruction-compile_yemk" class="instruction-text">For the compile Yemk script: select a series of Analysis files excluding Flip700 files.</p>
-            <p id="instruction-compile_flip700" class="instruction-text">For the compile Flip700 script: select a series of Analysis files excluding Yemk files.</p>
-            <p id="instruction-compile_phl" class="instruction-text">For the compile Phl script: select a series of Analysis files.</p>
-            <p id="instruction-compile_live" class="instruction-text">For the compile Live script: select a series of Analysis files.</p>
+        <div id="instructions">
+            <p id="test" class="script-instruction">Pick any Excel file and the script will generate a new Excel file of the same kind.</p>
+            <p id="concatenate_analysis" class="script-instruction">Select a number of analysis files for the script to concatenate data from.</p>
+            <p id="analysis_yemk_phl_live" class="script-instruction">Select a precursor file like "LC2-032_KCP1 pHL-YEMK DC 20231030.xlsx".</p>
+            <p id="analysis_flip700_phl_live" class="script-instruction">Select a precursor file like "LC2-032_KCP1 pHL-FLIP700 DC 20231030.xlsx".</p>
+            <p id="compile_yemk" class="script-instruction">Select a series of analysis files excluding Flip700 files.</p>
+            <p id="compile_flip700" class="script-instruction">Select a series of analysis files excluding Yemk files.</p>
+            <p id="compile_phl" class="script-instruction">Select a series of analysis files.</p>
+            <p id="compile_live" class="script-instruction">Select a series of analysis files.</p>
         </div>
     </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const scriptTypeSelect = document.getElementById('id_script_type');
-            const instructions = document.getElementById('instructions');
-            const instructionTexts = document.querySelectorAll('.instruction-text');
+        document.addEventListener('DOMContentLoaded', function() {
+            const scriptTypeElement = document.querySelector('select[name="script_type"]');
+            const instructions = document.querySelectorAll('.script-instruction');
 
             function updateInstructions() {
-                instructionTexts.forEach(instruction => {
-                    instruction.style.display = 'none';
-                });
-                const selectedScript = scriptTypeSelect.value;
-                if (selectedScript) {
-                    const instructionToShow = document.getElementById(`instruction-${selectedScript}`);
-                    if (instructionToShow) {
-                        instructionToShow.style.display = 'block';
-                    }
+                instructions.forEach(instruction => instruction.style.display = 'none');
+                const selectedScript = scriptTypeElement.value;
+                const selectedInstruction = document.getElementById(selectedScript);
+                if (selectedInstruction) {
+                    selectedInstruction.style.display = 'block';
                 }
             }
 
-            scriptTypeSelect.addEventListener('change', updateInstructions);
+            scriptTypeElement.addEventListener('change', updateInstructions);
             updateInstructions();
         });
     </script>
